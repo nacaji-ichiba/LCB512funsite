@@ -57,6 +57,11 @@ body {
     background-color: transparent; /* 背景透過 */
 }
 
+html, body {
+    height: 100%; /* 高さを確保 */
+    background-color: #021214; /* JSのdrawで指定していた色と同じにする */
+    margin: 0;
+}
 
 /* --- ヘッダーの基本設計 --- */
 .main-nav {
@@ -177,6 +182,7 @@ body {
     height: 100vh;
     z-index: -2;
     display: block;
+    background: transparent; /* 重要：ここを透明にする */
 }
 
 /* particles.js container */

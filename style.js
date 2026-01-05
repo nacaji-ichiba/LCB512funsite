@@ -29,22 +29,15 @@ function resize() {
         return { r, g, b };
     }
 
-    function draw() {
+function draw() {
         time += 0.002;
-        ctx.globalCompositeOperation = 'source-over';
-        ctx.fillStyle = "#021214ff";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        // 修正：source-overでの黒塗りつぶしを廃止。
+        // これにより、Canvas自体を透明にし、CSSの背景色を透過させます。
+        ctx.clearRect(0, 0, canvas.width, canvas.height); 
 
         colors.forEach((color, i) => {
-            const rgb = hexToRgb(color);
-            const x = canvas.width * (0.5 + 0.3 * Math.cos(time + i * 1.5));
-            const y = canvas.height * (0.5 + 0.3 * Math.sin(time * 0.8 + i * 2));
+            // （中略：既存のグラデーション描画処理）
             
-            const radius = Math.max(canvas.width, canvas.height) * 0.8;
-            const grd = ctx.createRadialGradient(x, y, 0, x, y, radius);
-            grd.addColorStop(0, `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.5)`);
-            grd.addColorStop(1, `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0)`);
-
             ctx.globalCompositeOperation = 'lighter';
             ctx.fillStyle = grd;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
