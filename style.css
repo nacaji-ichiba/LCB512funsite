@@ -1,5 +1,5 @@
 /* ==========================================
-   1. 基本レイアウトとリセット
+   1. 基本設定・リセット
    ========================================== */
 * {
     margin: 0;
@@ -9,8 +9,9 @@
 
 html {
     scroll-behavior: smooth;
-    /* ページ全体の土台となる色。これで下部の隙間は物理的に消滅します */
-    background-color: #021214; 
+    /* 背景が途切れるのを防ぐため、最背面に色を固定 */
+    background-color: #021214;
+    min-height: 100%;
 }
 
 body {
@@ -19,35 +20,26 @@ body {
     color: #ffffff;
     overflow-x: hidden;
     line-height: 1.8;
-    background-color: transparent; /* 背景はhtml側に任せる */
+    background-color: transparent;
+    /* 画面の高さを縛らず、コンテンツに追従させる */
     min-height: 100vh;
 }
 
 /* ==========================================
-   2. 背景演出（Canvas & Particles）
+   2. 背景レイヤー (Canvas / Particles)
    ========================================== */
-.canvas {
+.canvas, #particles-js {
     position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
-    z-index: -2;
     display: block;
-    background: transparent;
     pointer-events: none;
 }
 
-#particles-js {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    z-index: -1;
-    background-color: transparent !important;
-    pointer-events: none;
-}
+.canvas { z-index: -2; }
+#particles-js { z-index: -1; background-color: transparent !important; }
 
 /* ==========================================
    3. ナビゲーション
@@ -58,7 +50,7 @@ body {
     left: 0;
     width: 100%;
     z-index: 1000;
-    transition: background-color 0.4s ease, backdrop-filter 0.4s ease;
+    transition: all 0.4s ease;
     padding: 20px 0;
 }
 
@@ -83,7 +75,6 @@ body {
     height: 40px;
     width: auto;
     display: block;
-    pointer-events: auto;
 }
 
 .nav-item {
@@ -91,7 +82,6 @@ body {
     text-decoration: none;
     font-size: 1rem;
     font-weight: 500;
-    letter-spacing: 0.05em;
     position: relative;
     padding: 5px 0;
     white-space: nowrap;
@@ -100,49 +90,44 @@ body {
 .nav-item::after {
     content: '';
     position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 0;
-    height: 1px;
+    bottom: 0; left: 0;
+    width: 0; height: 1px;
     background: #ffffff;
-    transition: width 0.3s ease;
+    transition: width 0.3s;
 }
 
-.nav-item:hover::after {
-    width: 100%;
-}
+.nav-item:hover::after { width: 100%; }
 
 /* ==========================================
-   4. コンテンツ・コンテナ
+   4. コンテンツ配置
    ========================================== */
 .container {
     position: relative;
     z-index: 1;
     width: 100%;
     max-width: 100vw;
-    pointer-events: none;
-    background-color: transparent;
     margin-top: 8rem;
+    pointer-events: none; /* 下層のイベントを阻害しない */
 }
 
-/* リンクやボタンなど操作が必要な要素の有効化 */
-.header, .section, .white-box, .deadline, .terms, .share-section, a, button {
+/* コンテンツ内部のクリックを有効化 */
+.header, .section, .white-box, .deadline, .terms, .share-section, a, .no-save {
     pointer-events: auto;
 }
 
 /* ==========================================
-   5. ヘッダー & メインビジュアル
+   5. コンテンツ装飾 (Header / Visual)
    ========================================== */
 .header {
     text-align: center;
     margin-bottom: 60px;
+    padding: 0 5%;
 }
 
 .header h1 {
-    font-size: 3rem;
+    font-size: clamp(1.8rem, 5vw, 3rem); /* レスポンシブ対応の文字サイズ */
     font-weight: 900;
     margin-bottom: 15px;
-    letter-spacing: 0.05em;
     text-shadow: 0 2px 9px rgba(0, 0, 0, 0.4);
 }
 
@@ -151,79 +136,63 @@ body {
     color: #e8e8e8;
     max-width: 800px;
     margin: auto;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 .main-visual {
     margin: 30px auto;
     max-width: 800px;
     width: 90%;
-    line-height: 0;
+}
+
+.main-visual img {
+    width: 100%;
+    height: auto;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+/* 画像保存防止カバー */
+.no-save { position: relative; display: inline-block; }
+.no-save .image-cover {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 10;
+    background: transparent;
 }
 
 /* ==========================================
-   6. 画像保護 & 装飾
+   6. 浮遊イラスト
    ========================================== */
-img {
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    user-select: none;
-}
-
-img:not(.nav-logo img) {
-    pointer-events: none;
-}
-
-.no-save {
-    position: relative;
-    display: inline-block;
-    pointer-events: auto;
-}
-
-.no-save .image-cover {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 100;
-    cursor: default;
-    background: url('data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7');
-    pointer-events: auto;
-}
-
+.floating-image { width: 100%; text-align: center; }
 .floating-image img {
-    max-width: 400px;
-    filter: drop-shadow(0 0 15px rgba(26, 47, 95, 0.69));
+    max-width: min(400px, 80%);
+    filter: drop-shadow(0 0 15px rgba(26, 47, 95, 0.6));
     animation: floating 3s ease-in-out infinite;
 }
 
-.image-a { width: 100%; }
-.image-a img { margin: 0 0 0 auto; animation-delay: 0s; }
-.image-b img { margin: auto 0; animation-delay: 1s; }
+.image-a img { margin-left: auto; display: block; }
+.image-b img { margin-right: auto; display: block; animation-delay: 1s; }
 
 @keyframes floating {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-25px); }
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
 }
 
 /* ==========================================
-   7. セクション & ボックス
+   7. セクション・ボックス
    ========================================== */
-.section { margin-bottom: 50px; text-align: center; }
+.section { margin: 0 auto 50px; text-align: center; width: 90%; }
 
 .section-title {
     font-size: 2rem;
     font-weight: 700;
     margin-bottom: 25px;
-    padding-bottom: 12px;
-    border-bottom: 3px solid rgba(255, 255, 255, 0.8);
+    border-bottom: 3px solid #fff;
     display: inline-block;
 }
 
 .section-content {
     font-size: 1.05rem;
-    line-height: 2;
     max-width: 900px;
     margin: 0 auto;
 }
@@ -232,12 +201,11 @@ img:not(.nav-logo img) {
 
 .white-box {
     background: rgba(255, 255, 255, 0.96);
-    padding: 50px 45px;
+    padding: clamp(20px, 5%, 50px);
     border-radius: 25px;
     margin: 50px auto;
-    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.4);
-    text-align: center;
     max-width: 1200px;
+    width: 90%;
 }
 
 .subsection {
@@ -252,116 +220,89 @@ img:not(.nav-logo img) {
     margin-bottom: 20px;
 }
 
-.info-box {
-    margin: 20px auto;
-    text-align: left;
-    max-width: 900px;
-}
-
-.info-box li, .info-box p { color: #333; }
+.info-box { text-align: left; max-width: 900px; margin: 0 auto; }
+.info-box p, .info-box li { color: #333; }
 
 .deadline {
     background: #000;
-    padding: 25px 40px;
+    padding: 25px;
     border-radius: 20px;
-    text-align: center;
-    font-size: 1.5rem;
-    font-weight: 700;
     color: #ffe100;
+    font-weight: 700;
     margin: 50px auto;
     max-width: 600px;
+    width: 90%;
 }
 
 /* ==========================================
-   8. 利用規約
+   8. 規約・シェア・フッター
    ========================================== */
 .terms {
-    font-size: 0.95rem;
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(15px);
-    padding: 35px;
+    padding: 30px;
     border-radius: 15px;
     max-width: 1100px;
+    width: 90%;
     margin: 30px auto;
     text-align: left;
 }
 
-.terms .youkou {
-    font-size: 1.2rem;
-    font-weight: 700;
-    color: #ceeff9;
-    margin: 25px 0 15px;
-}
-
+.terms .youkou { color: #ceeff9; font-weight: 700; margin-top: 20px; }
 .terms ul { list-style: none; padding-left: 20px; }
-.terms li { margin-bottom: 12px; position: relative; padding-left: 1.5em; }
-.terms li::before {
-    content: "•";
-    position: absolute;
-    left: 0;
-    color: #ceeff9;
-}
+.terms li::before { content: "•"; color: #ceeff9; margin-right: 10px; }
 
-/* ==========================================
-   9. シェアボタン & フッター
-   ========================================== */
 .share-section {
-    text-align: center;
-    margin: 60px auto;
-    padding: 40px 30px;
     background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(15px);
+    padding: 40px 20px;
     border-radius: 20px;
     max-width: 600px;
+    width: 90%;
+    margin: 60px auto;
+    text-align: center;
 }
 
-.share-buttons { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
-
+.share-buttons { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
 .share-btn {
-    display: inline-flex;
-    align-items: center;
-    padding: 12px 24px;
+    padding: 10px 20px;
     border-radius: 50px;
     text-decoration: none;
     color: #fff;
     font-weight: 600;
-    transition: transform 0.3s;
+    display: inline-flex;
+    align-items: center;
 }
 
-.share-btn:hover { transform: translateY(-3px); }
-.share-btn.twitter { background: linear-gradient(135deg, #222b34, #838383); }
-.share-btn.facebook { background: linear-gradient(135deg, #1889f2, #5fa5ff); }
-.share-btn.bluesky { background: linear-gradient(135deg, #0085FF, #0066CC); }
+.share-btn.twitter { background: #222b34; }
+.share-btn.facebook { background: #1889f2; }
+.share-btn.bluesky { background: #0085FF; }
 .share-btn.oi { background: linear-gradient(180deg, #142092, #2a674f); }
-.share-btn svg { width: 20px; height: 20px; fill: currentColor; margin-right: 8px; }
+.share-btn svg { width: 18px; height: 18px; margin-right: 8px; fill: currentColor; }
 
 .footer-note {
     text-align: center;
-    font-size: 0.95rem;
-    color: #cccccc;
-    margin-top: 60px;
-    padding: 35px 0;
+    padding: 40px 0;
     border-top: 1px solid rgba(255, 255, 255, 0.2);
+    color: #ccc;
 }
 
 /* ==========================================
-   10. アニメーション & レスポンシブ
+   9. アニメーション
    ========================================== */
 .reveal {
     opacity: 0;
     transform: translateY(30px);
-    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+    transition: all 0.8s ease-out;
 }
-
 .reveal.is-visible { opacity: 1; transform: translateY(0); }
 
+/* ==========================================
+   10. スマホ対応調整
+   ========================================== */
 @media (max-width: 768px) {
+    .nav-container { gap: 10px; }
+    .nav-item { font-size: 0.85rem; }
+    .section-title { font-size: 1.5rem; }
+    .white-box { padding: 30px 15px; }
     .container { margin-top: 6rem; }
-    .header h1 { font-size: 2rem; }
-    .header, .section, .white-box, .terms, .share-section {
-        width: 90%;
-        margin-left: auto;
-        margin-right: auto;
-    }
-    .info-box { width: 90%; }
 }
