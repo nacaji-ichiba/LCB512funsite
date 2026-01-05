@@ -196,9 +196,11 @@ body {
     position: relative;
     z-index: 1;
     width: 100%;
+    max-width: 100vw; /* 画面幅を超えないように制限 */
     pointer-events: none;
-    background-color: transparent; /* 修正：ここが不透明だと背景が消えます */
+    background-color: transparent;
     margin-top: 8rem;
+    padding: 0; /* ここでの一律paddingを一度リセット */
 }
 
 /* 実際に触る必要がある要素の操作を有効化 */
@@ -542,7 +544,11 @@ body {
 }
 /* レスポンシブ対応 */
 @media (max-width: 768px) {
-    .container { padding: 40px 20px; }
+.container {
+        /* スマホ時に余計な余白で幅が100%を超えるのを防ぐ */
+        padding: 0; 
+        margin-top: 6rem; /* ヘッダーが重ならない程度に調整 */
+    }
     .header h1 { font-size: 2rem; }
     .header .subtitle { font-size: 0.95rem; width: 80%; }
     .section-title { font-size: 1.5rem; }
@@ -562,4 +568,10 @@ body {
     width: 80%;
     margin: auto;
 }
+/* 各セクションの横幅が画面端にくっつかないよう調整 */
+    .header, .section, .white-box, .terms, .share-section {
+        width: 90%;
+        margin-left: auto;
+        margin-right: auto;
+    }
 }
