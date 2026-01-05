@@ -182,7 +182,9 @@ html, body {
     height: 100vh;
     z-index: -2;
     display: block;
-    background: transparent; /* 重要：ここを透明にする */
+    background: transparent;
+    pointer-events: none;
+    /* 重要：ここを透明にする */
 }
 
 /* particles.js container */

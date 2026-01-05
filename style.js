@@ -31,13 +31,25 @@ function resize() {
 
 function draw() {
         time += 0.002;
-        // 修正：source-overでの黒塗りつぶしを廃止。
-        // これにより、Canvas自体を透明にし、CSSの背景色を透過させます。
+        
+        // Canvasを毎フレームクリア（透明にする）
         ctx.clearRect(0, 0, canvas.width, canvas.height); 
 
         colors.forEach((color, i) => {
-            // （中略：既存のグラデーション描画処理）
+            const rgb = hexToRgb(color);
             
+            // 画面サイズに基づいた座標計算
+            const x = canvas.width * (0.5 + 0.3 * Math.cos(time + i * 1.5));
+            const y = canvas.height * (0.5 + 0.3 * Math.sin(time * 0.8 + i * 2));
+            
+            // 描画サイズ（dprを考慮したスケーリング）
+            const radius = Math.max(canvas.width, canvas.height) * 0.8;
+            
+            // グラデーションの作成
+            const grd = ctx.createRadialGradient(x / (window.devicePixelRatio || 1), y / (window.devicePixelRatio || 1), 0, x / (window.devicePixelRatio || 1), y / (window.devicePixelRatio || 1), radius / (window.devicePixelRatio || 1));
+            grd.addColorStop(0, `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.5)`);
+            grd.addColorStop(1, `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0)`);
+
             ctx.globalCompositeOperation = 'lighter';
             ctx.fillStyle = grd;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
