@@ -1,51 +1,16 @@
-/* ---- reset ---- */
+/* ==========================================
+   1. 基本レイアウトとリセット
+   ========================================== */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
-/* ページ内の全画像に対して共通の制限 */
-img {
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    user-select: none;
-    /* 修正：pointer-events: none; を削除または auto に。
-       これがないとJSの右クリック検知(click/contextmenu)が反応しません */
-    pointer-events: auto; 
-}
-
-.nav-logo img {
-    height: 40px; /* ヘッダーの高さに合わせて適宜調整 */
-    width: auto;
-    pointer-events: auto;
-    display: block;
-}
-
-.oi img {
-    width: 25px;
-}
-/* 画像を包むコンテナ */
-.no-save {
-    position: relative;
-    display: inline-block;
-    pointer-events: auto;
-}
-
-/* 実際の画像 */
-.no-save img {
-    display: block;
-    width: 100%;
-    height: auto;
-}
-
-/* ロゴ以外の img にのみ制限をかける場合 */
-img:not(.nav-logo img) {
-    pointer-events: none;
-}
 
 html {
     scroll-behavior: smooth;
-    background-color: #000; /* ベースの色 */
+    /* ページ全体の土台となる色。これで下部の隙間は物理的に消滅します */
+    background-color: #021214; 
 }
 
 body {
@@ -54,126 +19,13 @@ body {
     color: #ffffff;
     overflow-x: hidden;
     line-height: 1.8;
-    background-color: transparent; /* 背景透過 */
+    background-color: transparent; /* 背景はhtml側に任せる */
+    min-height: 100vh;
 }
 
-html, body {
-    height: 100%; /* 高さを確保 */
-    background-color: #021214; /* JSのdrawで指定していた色と同じにする */
-    margin: 0;
-}
-
-/* --- ヘッダーの基本設計 --- */
-.main-nav {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 1000;
-    transition: background-color 0.4s ease, backdrop-filter 0.4s ease;
-    padding: 20px 0;
-}
-/* スクロール後にJSで付与するクラス */
-.main-nav.scrolled {
-    background-color:rgb(0 75 100 / 62%); /* 濃い透過黒 */
-    backdrop-filter: blur(10px); /* 磨りガラス効果 */
-    padding: 15px 0;
-}
-.nav-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-    display: flex;
-    justify-content: center; /* 中央寄せ */
-    gap: 30px;
-    flex-wrap: wrap; /* SP版で入り切らない場合に折り返す */
-}
-.nav-item {
-    color: #ffffff;
-    text-decoration: none;
-    font-size: 1rem;
-    font-weight: 500;
-    letter-spacing: 0.05em;
-    position: relative;
-    padding: 5px 0;
-    white-space: nowrap; /* 文字が途中で改行されないように */
-}
-/* 下線のホバーアニメーション */
-.nav-item::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 0;
-    height: 1px;
-    background: #ffffff; /* キャンバスの色の一つに合わせる */
-    transition: width 0.3s ease;
-}
-.nav-item:hover::after {
-    width: 100%;
-}
-/* --- ロゴのスタイル --- */
-.nav-logo {
-    display: flex;
-    align-items: center;
-}
-
-
-/* ナビゲーションの構造調整：ロゴとリンクを分ける */
-.nav-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-    display: flex;
-    justify-content: space-around; /* ロゴとリンクを両端に */
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 20px;
-}
-
-.nav-links {
-    display: flex;
-    gap: 30px;
-    flex-wrap: wrap;
-    justify-content: center;
-}
-
-/* --- メインビジュアル（h1の下） --- */
-.main-visual {
-    margin: 30px auto; /* 上下に余白を作り中央揃え */
-    max-width: 800px;  /* 画像の最大幅（任意） */
-    width: 90%;       /* スマホ等で画面からはみ出さないように */
-    line-height: 0;   /* 下部の余計な隙間を排除 */
-}
-
-.main-visual img {
-    width: 100%;      /* 親要素の幅に合わせる */
-    height: auto;
-    border-radius: 15px; /* 角を少し丸める（デザイン上の提案） */
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); /* 浮遊感を出す */
-}
-
-/* 画像を覆う透明な板 */
-.no-save .image-cover {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 100; /* 確実に img より上に */
-    cursor: default;
-    background: url('data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7');
-    /* カバー自体でイベントをキャッチする */
-    pointer-events: auto;
-}
-
-/* スクリプトでスクロール位置を調整するための指定（アンカーリンクの着地が隠れないように） */
-:target {
-    scroll-margin-top: 100px;
-}
-
-
-/* グラデーションキャンバス（最背面） */
+/* ==========================================
+   2. 背景演出（Canvas & Particles）
+   ========================================== */
 .canvas {
     position: fixed;
     top: 0;
@@ -184,10 +36,8 @@ html, body {
     display: block;
     background: transparent;
     pointer-events: none;
-    /* 重要：ここを透明にする */
 }
 
-/* particles.js container */
 #particles-js {
     position: fixed;
     top: 0;
@@ -199,24 +49,90 @@ html, body {
     pointer-events: none;
 }
 
-/* 全体のコンテナ */
+/* ==========================================
+   3. ナビゲーション
+   ========================================== */
+.main-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    transition: background-color 0.4s ease, backdrop-filter 0.4s ease;
+    padding: 20px 0;
+}
+
+.main-nav.scrolled {
+    background-color: rgba(0, 75, 100, 0.62);
+    backdrop-filter: blur(10px);
+    padding: 15px 0;
+}
+
+.nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.nav-logo img {
+    height: 40px;
+    width: auto;
+    display: block;
+    pointer-events: auto;
+}
+
+.nav-item {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    position: relative;
+    padding: 5px 0;
+    white-space: nowrap;
+}
+
+.nav-item::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: #ffffff;
+    transition: width 0.3s ease;
+}
+
+.nav-item:hover::after {
+    width: 100%;
+}
+
+/* ==========================================
+   4. コンテンツ・コンテナ
+   ========================================== */
 .container {
     position: relative;
     z-index: 1;
     width: 100%;
-    max-width: 100vw; /* 画面幅を超えないように制限 */
+    max-width: 100vw;
     pointer-events: none;
     background-color: transparent;
     margin-top: 8rem;
-    padding: 0; /* ここでの一律paddingを一度リセット */
 }
 
-/* 実際に触る必要がある要素の操作を有効化 */
-.header, .section, .white-box, .deadline, .terms, a, button {
+/* リンクやボタンなど操作が必要な要素の有効化 */
+.header, .section, .white-box, .deadline, .terms, .share-section, a, button {
     pointer-events: auto;
 }
 
-/* ヘッダー */
+/* ==========================================
+   5. ヘッダー & メインビジュアル
+   ========================================== */
 .header {
     text-align: center;
     margin-bottom: 60px;
@@ -225,7 +141,6 @@ html, body {
 .header h1 {
     font-size: 3rem;
     font-weight: 900;
-    color: #ffffff;
     margin-bottom: 15px;
     letter-spacing: 0.05em;
     text-shadow: 0 2px 9px rgba(0, 0, 0, 0.4);
@@ -234,112 +149,87 @@ html, body {
 .header .subtitle {
     font-size: 1.1rem;
     color: #e8e8e8;
-    line-height: 1.8;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    max-width: 800px;
     margin: auto;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
-/* 画像 - 浮遊アニメーション */
+.main-visual {
+    margin: 30px auto;
+    max-width: 800px;
+    width: 90%;
+    line-height: 0;
+}
+
+/* ==========================================
+   6. 画像保護 & 装飾
+   ========================================== */
+img {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+img:not(.nav-logo img) {
+    pointer-events: none;
+}
+
+.no-save {
+    position: relative;
+    display: inline-block;
+    pointer-events: auto;
+}
+
+.no-save .image-cover {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+    cursor: default;
+    background: url('data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7');
+    pointer-events: auto;
+}
+
 .floating-image img {
     max-width: 400px;
-    filter: drop-shadow(rgba(26, 47, 95, 0.69));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    color: #fff;
+    filter: drop-shadow(0 0 15px rgba(26, 47, 95, 0.69));
     animation: floating 3s ease-in-out infinite;
 }
-.image-a {
-    width: 100%;
-}
-.image-a img {
-    animation-delay: 0s;
-    margin: 0 0 0 auto;
-}
 
-.image-b img {
-    animation-delay: 1s;
-    margin: auto 0;
-}
+.image-a { width: 100%; }
+.image-a img { margin: 0 0 0 auto; animation-delay: 0s; }
+.image-b img { margin: auto 0; animation-delay: 1s; }
 
 @keyframes floating {
     0%, 100% { transform: translateY(0px); }
     50% { transform: translateY(-25px); }
 }
 
-/* マグネティック効果用のスタイル */
-.main-visual.poi {
-    cursor: pointer;
-    position: relative;
-    overflow: visible;
-}
-
-.main-visual.poi .thumb {
-    position: relative;
-    overflow: hidden;
-    border-radius: 15px;
-    transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
-    will-change: transform;
-}
-
-.main-visual.poi .thumb img {
-    width: 100%;
-    height: auto;
-    display: block;
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
-}
-
-.main-visual.poi:hover .thumb img {
-    transform: scale(1.05);
-}
-/* セクション */
-.section {
-    margin-bottom: 50px;
-    text-align: center;
-}
+/* ==========================================
+   7. セクション & ボックス
+   ========================================== */
+.section { margin-bottom: 50px; text-align: center; }
 
 .section-title {
     font-size: 2rem;
     font-weight: 700;
-    color: #ffffff;
     margin-bottom: 25px;
     padding-bottom: 12px;
     border-bottom: 3px solid rgba(255, 255, 255, 0.8);
-    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
     display: inline-block;
 }
 
 .section-content {
     font-size: 1.05rem;
     line-height: 2;
-    color: #e8e8e8;
-    text-shadow: 0 1px 5px rgba(0, 0, 0, 0.3);
     max-width: 900px;
     margin: 0 auto;
 }
-.section-content.sec {
-    color: #333;
-    text-shadow: none;
-}
 
-/* 提出締切 */
-.deadline {
-    background: linear-gradient(#000000);
-    padding: 25px 40px;
-    border-radius: 20px;
-    text-align: center;
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #ffe100;
-    margin: 50px auto;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-    max-width: 600px;
-}
+.section-content.sec { color: #333; }
 
-/* 白いボックスセクション */
 .white-box {
     background: rgba(255, 255, 255, 0.96);
     padding: 50px 45px;
@@ -356,102 +246,65 @@ html, body {
     border-top: 2px solid #e0e0e0;
 }
 
-.subsection:first-child {
-    margin-top: 0;
-    padding-top: 0;
-    border-top: none;
-}
-
 .subsection-title {
     font-size: 1.6rem;
-    font-weight: 700;
     color: #00b3c0;
     margin-bottom: 20px;
 }
 
 .info-box {
-    border-radius: 15px;
     margin: 20px auto;
     text-align: left;
     max-width: 900px;
 }
 
-.info-box ul { list-style: none; padding-left: 0; }
-.info-box li {
-    padding: 10px 0;
-    position: relative;
-    color: #333;
-    line-height: 1.9;
-}
-.info-box p { color: #333; margin: 8px 0; line-height: 1.8; }
+.info-box li, .info-box p { color: #333; }
 
-/* 利用規約セクション */
+.deadline {
+    background: #000;
+    padding: 25px 40px;
+    border-radius: 20px;
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #ffe100;
+    margin: 50px auto;
+    max-width: 600px;
+}
+
+/* ==========================================
+   8. 利用規約
+   ========================================== */
 .terms {
     font-size: 0.95rem;
-    line-height: 1.9;
-    color: #e8e8e8;
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(15px);
     padding: 35px;
     border-radius: 15px;
-    margin-top: 30px;
-    text-align: left;
     max-width: 1100px;
-    margin-left: auto;
-    margin-right: auto;
+    margin: 30px auto;
+    text-align: left;
 }
 
 .terms .youkou {
     font-size: 1.2rem;
     font-weight: 700;
     color: #ceeff9;
-    margin-top: 25px;
-    margin-bottom: 15px;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    margin: 25px 0 15px;
 }
 
-.terms .youkou:first-child { margin-top: 0; }
-.terms ul { margin-top: 10px; padding-left: 20px; list-style: none; }
-.terms li {
-    margin-bottom: 12px;
-    padding-left: 1.5em;
-    position: relative;
-    line-height: 1.8;
-}
+.terms ul { list-style: none; padding-left: 20px; }
+.terms li { margin-bottom: 12px; position: relative; padding-left: 1.5em; }
 .terms li::before {
     content: "•";
     position: absolute;
     left: 0;
     color: #ceeff9;
-    font-weight: bold;
-    font-size: 1.2em;
 }
 
-/* フッター */
-.footer-note {
-    text-align: center;
-    font-size: 0.95rem;
-    color: #cccccc;
-    margin-top: 60px;
-    padding-top: 35px;
-    border-top: 1px solid rgba(255, 255, 255, 0.2);
-    text-shadow: 0 1px 5px rgba(0, 0, 0, 0.3);
-}
-
-/* フェードインの初期状態 */
-.reveal {
-    opacity: 0;
-    transform: translateY(30px);
-    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-}
-
-/* 表示された時の状態 */
-.reveal.is-visible {
-    opacity: 1;
-    transform: translateY(0);
-}
-/* シェアボタン */
-/* シェアボタンセクション */
+/* ==========================================
+   9. シェアボタン & フッター
+   ========================================== */
 .share-section {
     text-align: center;
     margin: 60px auto;
@@ -462,124 +315,53 @@ html, body {
     max-width: 600px;
 }
 
-.share-title {
-    font-size: 1.3rem;
-    font-weight: 700;
-    color: #ffffff;
-    margin-bottom: 25px;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-}
-
-.share-buttons {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    flex-wrap: wrap;
-}
+.share-buttons { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
 
 .share-btn {
     display: inline-flex;
     align-items: center;
-    justify-content: center;
-    gap: 8px;
     padding: 12px 24px;
     border-radius: 50px;
     text-decoration: none;
+    color: #fff;
     font-weight: 600;
+    transition: transform 0.3s;
+}
+
+.share-btn:hover { transform: translateY(-3px); }
+.share-btn.twitter { background: linear-gradient(135deg, #222b34, #838383); }
+.share-btn.facebook { background: linear-gradient(135deg, #1889f2, #5fa5ff); }
+.share-btn.bluesky { background: linear-gradient(135deg, #0085FF, #0066CC); }
+.share-btn.oi { background: linear-gradient(180deg, #142092, #2a674f); }
+.share-btn svg { width: 20px; height: 20px; fill: currentColor; margin-right: 8px; }
+
+.footer-note {
+    text-align: center;
     font-size: 0.95rem;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    color: #ffffff;
+    color: #cccccc;
+    margin-top: 60px;
+    padding: 35px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.share-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-}
-
-.share-btn:active {
-    transform: translateY(-1px);
-}
-
-/* 各SNSの色 */
-.share-btn.twitter {
-    background: linear-gradient(135deg, #222b34 0%, #838383 100%);
-}
-
-.share-btn.facebook {
-    background: linear-gradient(135deg, #1889f2 0%, #5fa5ff 100%);
-}
-
-.share-btn.bluesky {
-    background: linear-gradient(135deg, #0085FF 0%, #0066CC 100%);
-}
-.share-btn.oi {
-    background: linear-gradient(180deg, #142092 0%,  #2a674f 100%);
-}
-
-.share-btn svg {
-    width: 20px;
-    height: 20px;
-    fill: currentColor;
-    flex-shrink: 0;
-}
-
-/* コピー完了メッセージ */
-.copy-message {
-    margin-top: 15px;
-    font-size: 0.9rem;
-    color: #00ee67;
+/* ==========================================
+   10. アニメーション & レスポンシブ
+   ========================================== */
+.reveal {
     opacity: 0;
-    transition: opacity 0.3s ease;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
 }
 
-.copy-message.show {
-    opacity: 1;
-}
+.reveal.is-visible { opacity: 1; transform: translateY(0); }
 
-/* レスポンシブ（シェアボタン用） */
 @media (max-width: 768px) {
-    .share-section {
-        padding: 30px 20px;
-    }
-    .share-title {
-        font-size: 1.1rem;
-    }
-    .share-btn {
-        padding: 10px 20px;
-        font-size: 0.9rem;
-    }
-}
-/* レスポンシブ対応 */
-@media (max-width: 768px) {
-.container {
-        /* スマホ時に余計な余白で幅が100%を超えるのを防ぐ */
-        padding: 0; 
-        margin-top: 6rem; /* ヘッダーが重ならない程度に調整 */
-    }
+    .container { margin-top: 6rem; }
     .header h1 { font-size: 2rem; }
-    .header .subtitle { font-size: 0.95rem; width: 80%; }
-    .section-title { font-size: 1.5rem; }
-    .section-content { font-size: 0.95rem; width: 80%;margin: auto;}
-    .deadline { font-size: 1.2rem; padding: 20px 25px; }
-    .white-box { padding: 35px 25px; }
-    .subsection-title { font-size: 1.3rem; }
-    .terms { font-size: 0.85rem; padding: 25px 20px; }
-    .footer-note { font-size: 0.85rem; }
-    .nav-container {
-        gap: 15px 25px; /* 上下の隙間と左右の隙間 */
-    }
-    .nav-item {
-        font-size: 0.9rem;
-    }
-    .info-box {
-    width: 80%;
-    margin: auto;
-}
-/* 各セクションの横幅が画面端にくっつかないよう調整 */
     .header, .section, .white-box, .terms, .share-section {
         width: 90%;
         margin-left: auto;
         margin-right: auto;
     }
+    .info-box { width: 90%; }
 }

@@ -30,32 +30,31 @@ function resize() {
     }
 
 function draw() {
-        time += 0.002;
+    time += 0.002;
+    ctx.clearRect(0, 0, canvas.width, canvas.height); 
+
+    const dpr = window.devicePixelRatio || 1;
+
+    colors.forEach((color, i) => {
+        const rgb = hexToRgb(color);
         
-        // Canvasを毎フレームクリア（透明にする）
-        ctx.clearRect(0, 0, canvas.width, canvas.height); 
+        // 座標計算：物理ピクセルではなく論理ピクセルベースで計算してからDPRを掛ける
+        const rawX = window.innerWidth * (0.5 + 0.35 * Math.cos(time + i * 1.5));
+        const rawY = window.innerHeight * (0.5 + 0.35 * Math.sin(time * 0.8 + i * 2));
+        
+        // 描画サイズ：画面全体を覆うのに十分な大きさに（1.2倍程度）
+        const radius = Math.max(window.innerWidth, window.innerHeight) * 1.2;
+        
+        const grd = ctx.createRadialGradient(rawX, rawY, 0, rawX, rawY, radius);
+        grd.addColorStop(0, `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.4)`);
+        grd.addColorStop(1, `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0)`);
 
-        colors.forEach((color, i) => {
-            const rgb = hexToRgb(color);
-            
-            // 画面サイズに基づいた座標計算
-            const x = canvas.width * (0.5 + 0.3 * Math.cos(time + i * 1.5));
-            const y = canvas.height * (0.5 + 0.3 * Math.sin(time * 0.8 + i * 2));
-            
-            // 描画サイズ（dprを考慮したスケーリング）
-            const radius = Math.max(canvas.width, canvas.height) * 0.8;
-            
-            // グラデーションの作成
-            const grd = ctx.createRadialGradient(x / (window.devicePixelRatio || 1), y / (window.devicePixelRatio || 1), 0, x / (window.devicePixelRatio || 1), y / (window.devicePixelRatio || 1), radius / (window.devicePixelRatio || 1));
-            grd.addColorStop(0, `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.5)`);
-            grd.addColorStop(1, `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0)`);
-
-            ctx.globalCompositeOperation = 'lighter';
-            ctx.fillStyle = grd;
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-        });
-        requestAnimationFrame(draw);
-    }
+        ctx.globalCompositeOperation = 'lighter';
+        ctx.fillStyle = grd;
+        ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
+    });
+    requestAnimationFrame(draw);
+}
     draw();
 
     // particles.js の設定
