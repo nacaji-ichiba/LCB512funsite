@@ -5,10 +5,20 @@ window.addEventListener('DOMContentLoaded', () => {
     const colors = ["#00ee67ff", "#0400ffff", "#00660c", "#057eff"];
     let time = 0;
 
-    function resize() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-    }
+// style.js 内の resize 関数を以下に差し替え
+function resize() {
+    // 画面のピクセル比を考慮（ぼやけと隙間の防止）
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = window.innerWidth * dpr;
+    canvas.height = window.innerHeight * dpr;
+    
+    // 表示サイズは CSS で制御
+    canvas.style.width = window.innerWidth + 'px';
+    canvas.style.height = window.innerHeight + 'px';
+    
+    // 描画コンテキストのスケールを調整
+    ctx.scale(dpr, dpr);
+}
     window.addEventListener('resize', resize);
     resize();
 
