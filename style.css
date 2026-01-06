@@ -58,6 +58,10 @@ body {
     /* 重要：height: 100% は絶対に書かない。最小高さを指定する */
     min-height: 100vh;
     background-color: transparent;
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none;    /* Firefox */
+    -ms-user-select: none;     /* IE10+ */
+    user-select: none;         /* 標準 */
 }
 
 

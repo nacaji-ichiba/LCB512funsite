@@ -181,20 +181,30 @@ function draw() {
 
 // window全体で右クリックを監視し、.no-save内であれば即座にブロックする
 window.addEventListener('contextmenu', (e) => {
-    // 右クリックされた要素、またはその親要素に .no-save があるかチェック
-    const isNoSave = e.target.closest('.no-save');
-    
-    if (isNoSave) {
-        e.preventDefault(); // ブラウザ標準メニューを阻止
-        e.stopPropagation(); // イベントの拡散を阻止
-        alert('触るな');
+   // フォーム要素以外はすべて禁止
+    if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+        e.preventDefault();
+        // 画像エリア（.no-save）だった場合は警告を出す（既存の挙動を維持）
+        if (e.target.closest('.no-save')) {
+            alert('画像の保存は禁止されています');
+        }
         return false;
     }
 }, true); // true (キャプチャリング) を指定して、ブラウザの挙動より先に割り込む
 
-// ドラッグも同様に防止
+// テキストコピー操作の禁止
+window.addEventListener('copy', (e) => {
+    // フォーム要素以外でのコピーを阻止
+    if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+        e.preventDefault();
+        // alert('コピーは禁止されています'); // 必要なら警告を出す
+        return false;
+    }
+}, true);
+
+// ドラッグ（画像の持ち出しなど）の禁止
 window.addEventListener('dragstart', (e) => {
-    if (e.target.closest('.no-save')) {
+    if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
         e.preventDefault();
     }
 }, true);
