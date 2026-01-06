@@ -335,6 +335,10 @@ body {
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
     max-width: 600px;
 }
+.deadline.reveal.is-visible {
+    width: 80%;
+}
+
 
 /* 白いボックスセクション */
 .white-box {
@@ -555,9 +559,9 @@ body {
         margin-top: 6rem; /* ヘッダーが重ならない程度に調整 */
     }
     .header h1 { font-size: 2rem; }
-    .header .subtitle { font-size: 0.95rem; width: 80%; }
+    .header .subtitle { font-size: 0.95rem; width: 90%; }
     .section-title { font-size: 1.5rem; }
-    .section-content { font-size: 0.95rem; width: 80%;margin: auto;}
+    .section-content { font-size: 0.95rem; width: 90%;margin: auto;}
     .deadline { font-size: 1.2rem; padding: 20px 25px; }
     .white-box { padding: 35px 25px; }
     .subsection-title { font-size: 1.3rem; }
@@ -570,7 +574,7 @@ body {
         font-size: 0.9rem;
     }
     .info-box {
-    width: 80%;
+    width: 90%;
     margin: auto;
 }
 /* 各セクションの横幅が画面端にくっつかないよう調整 */
