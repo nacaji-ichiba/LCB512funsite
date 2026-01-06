@@ -210,4 +210,20 @@ function raf(time) {
 
 requestAnimationFrame(raf);
 
+// ピンチズーム（2本指操作）を禁止する
+document.addEventListener('touchstart', (e) => {
+    if (e.touches.length > 1) {
+        e.preventDefault();
+    }
+}, { passive: false });
+
+// ダブルタップズームを禁止する（iOS対策）
+let lastTouchEnd = 0;
+document.addEventListener('touchend', (e) => {
+    const now = (new Date()).getTime();
+    if (now - lastTouchEnd <= 300) {
+        e.preventDefault();
+    }
+    lastTouchEnd = now;
+}, false);
 });
