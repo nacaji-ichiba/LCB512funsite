@@ -46,7 +46,8 @@ img:not(.nav-logo img) {
 html {
     scroll-behavior: smooth;
     /* ページ全体のベース色をここに指定。これで下部が黒くなることはありません */
-    background-color: #021214; 
+    background-color: #021214;
+    scroll-behavior: smooth;
 }
 body {
     margin: 0;
