@@ -86,7 +86,7 @@ function draw() {
             }
         });
     }, {
-        threshold: 0.8
+        threshold: 0.5
     });
 
     revealElements.forEach(el => observer.observe(el));
