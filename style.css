@@ -45,23 +45,20 @@ img:not(.nav-logo img) {
 
 html {
     scroll-behavior: smooth;
-    background-color: #000; /* ベースの色 */
+    /* ページ全体のベース色をここに指定。これで下部が黒くなることはありません */
+    background-color: #021214; 
 }
-
 body {
     margin: 0;
-    font-family: 'Zen Maru Gothic', 'M PLUS Rounded 1c', 'Hiragino Maru Gothic ProN', sans-serif;
+    font-family: 'Zen Maru Gothic', 'M PLUS Rounded 1c', sans-serif;
     color: #ffffff;
     overflow-x: hidden;
     line-height: 1.8;
-    background-color: transparent; /* 背景透過 */
+    /* 重要：height: 100% は絶対に書かない。最小高さを指定する */
+    min-height: 100vh;
+    background-color: transparent;
 }
 
-html, body {
-    height: 100%; /* 高さを確保 */
-    background-color: #021214; /* JSのdrawで指定していた色と同じにする */
-    margin: 0;
-}
 
 /* --- ヘッダーの基本設計 --- */
 .main-nav {
